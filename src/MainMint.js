@@ -1,114 +1,125 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ethers, BigNumber } from "ethers";
-import { Box, Flex, Button, Input, Text } from "@chakra-ui/react";
+import { Box, Flex, Button, Input, Text, MenuButton } from "@chakra-ui/react";
 import scrolliumPass from "./ScrolliumPass.json";
 import sc from "./assets/social-media-icons/ssc.gif";
-import detectEthereumProvider from '@metamask/detect-provider';
-import { useContractRead, useContract,useContractWrite, useAddress, ThirdwebProvider, ChainId, useDisconnect } from "@thirdweb-dev/react";
-import { useMetamask } from '@thirdweb-dev/react';
-import MetaMaskOnboarding from '@metamask/onboarding';
-import { Toaster, toast } from 'react-hot-toast';
+import detectEthereumProvider from "@metamask/detect-provider";
+import {
+  useContractRead,
+  useContract,
+  useContractWrite,
+  useAddress,
+  ThirdwebProvider,
+  ChainId,
+  useDisconnect,
+  useCoinbaseWallet,
+  useWalletConnect,
+  useNFTDrop,
+  useTotalCirculatingSupply,
+  useTotalCount,
+} from "@thirdweb-dev/react";
+import { useMetamask } from "@thirdweb-dev/react";
+import MetaMaskOnboarding from "@metamask/onboarding";
+import TT from "./conthrax-sb.otf";
+import { Toaster, toast } from "react-hot-toast";
+import {
+  ChakraProvider,
+  extendTheme,
+  Menu,
+  MenuList,
+  MenuItem,
+  IconButton,
+  Grid,
+  Divider,
+  Spinner,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Tooltip,
+} from "@chakra-ui/react";
+import { MetamaskLogo } from "./assets/icons/MetamaskLogo.tsx";
+import { WalletConnectLogo } from "./assets/icons/WalletConnectLogo.tsx";
+import { CoinbaseLogo } from "./assets/icons/CoinbaseLogo.tsx";
 
+import {
+  useClaimedNFTSupply,
+  useContractMetadata,
+  useUnclaimedNFTSupply,
+  useActiveClaimCondition,
+  useClaimNFT,
+  useBalance,
+  MediaRenderer,
+  useNetworkMismatch,
+  useNetwork,
+  useClaimIneligibilityReasons,
+} from "@thirdweb-dev/react";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { StyleFunctionProps } from "@chakra-ui/theme-tools";
+import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 
-const METAMASK_DEEPLINK = "https://metamask.app.link/dapp/scrollium.vercel.app/"; // Replace with your MetaMask deeplink
+const contractAddress = "0xf7cFC8c624b386aC05de7154c5E4593C3C735B7A";
 
 const MaintMint = ({ accounts, setAccounts }) => {
-    const { contract, isLoading } = useContract(
-        process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS
-      );
-    const address = useAddress();
-    const disconnect = useDisconnect();
-    const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
-    const connectWithMetamask = useMetamask();
-    const { mutateAsync: approve  } = useContractWrite(contract, "approve")
-    const { mutateAsync: claim, } = useContractWrite(contract, "claim")
-    const desiredNetwork = {
-        chainId: '0x8274F',
-        chainName: 'Scroll Alpha Testnet',
-        nativeCurrency: {
-            name: 'ETH',
-            symbol: 'ETH',
-            decimals: 18
-        },
-        rpcUrls: ['https://sepolia-rpc.scroll.io'],
-        blockExplorerUrls: ['https://sepolia-blockscout.scroll.io']
-    };
+  const contract = useNFTDrop(contractAddress);
+  const connectWithCoinbaseWallet = useCoinbaseWallet();
+  const connectWithWalletConnect = useWalletConnect();
+  const connectWithMetamask = useMetamask();
+  const address = useAddress();
+  const disconnect = useDisconnect();
+  const {
+    data: totalCirculatingSupply,
+    isLoading,
+    error,
+  } = useTotalCirculatingSupply(contract);
+  const { data: count } = useTotalCount(contract);
 
-    useEffect(() => {
-        const videos = document.querySelectorAll('video');
-        videos.forEach(video => {
-            video.muted = true;
-            video.play();
-        });
-    }, []);
+  const { data: contractMetadata } = useContractMetadata(contract);
 
-    useEffect(() => {
-        const checkInstallation = async () => {
-            const provider = await detectEthereumProvider();
-            setIsMetaMaskInstalled(!!provider);
-        };
-
-        checkInstallation();
-    }, []);
-
-    async function requestNetworkSwitch(provider) {
-        try {
-            await provider.request({
-                method: 'wallet_addEthereumChain',
-                params: [desiredNetwork],
-            });
-        } catch (switchError) {
-            console.error(switchError);
-            // Handle the error, maybe alert the user they need to switch manually or the network details are wrong
-        }
+  const mint = async () => {
+    try {
+      await contract?.claim(1);
+      alert("mint succesfull");
+    } catch (error) {
+      toast.error("You are not Whitelisted!");
+      console.log("error");
     }
-    
-    const handleLoginClick = async (e) => {
-        e.preventDefault();
+  };
+  const desiredNetwork = {
+    chainId: "0x8274F",
+    chainName: "Scroll Alpha Testnet",
+    nativeCurrency: {
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    rpcUrls: ["https://sepolia-rpc.scroll.io"],
+    blockExplorerUrls: ["https://sepolia-blockscout.scroll.io"],
+  };
 
-        if (!isMetaMaskInstalled) {
-            window.open(METAMASK_DEEPLINK, '_blank');
-            toast.error('MetaMask is not installed!');
-            return;
-        }
-
-        const { ethereum } = window;
-        if (ethereum && ethereum.isMetaMask) {
-            if (ethereum.chainId !== desiredNetwork.chainId) {
-                await requestNetworkSwitch(ethereum);
-            }
-            // After ensuring the correct network or prompting to switch, proceed to connect with MetaMask
-            connectWithMetamask();
-        } else {
-            console.log('Please install MetaMask!');
-        }
-    };
-
-    const handleOneClick = async () => {
-        try {
-            // First approve
-            await approve();
-    
-            // Once approve is successful, then claim
-            await claim();
-            
-            // Optionally, display success message or perform some action here
-    
-        } catch (error) {
-            // Handle any errors that might occur during approve or claim
-            console.error('Error during one-click operation:', error);
-        }
+  async function requestNetworkSwitch(provider) {
+    try {
+      await provider.request({
+        method: "wallet_addEthereumChain",
+        params: [desiredNetwork],
+      });
+    } catch (switchError) {
+      console.error(switchError);
+      // Handle the error, maybe alert the user they need to switch manually or the network details are wrong
     }
-    
-    
+  }
 
- 
   return (
     <Flex justify="center" align="center" height="70vh" paddingBottom="20px">
+      <Toaster position="top-center" />
       <Box width="600px">
         <div className="">
           <Text fontSize="60px" textShadow="0 5px #000000">
             Scrollium Pass
+          </Text>
+        </div>
+        <div>
+          <Text>
+            Total Minted: {totalCirculatingSupply?.toNumber()} / 2222{" "}
           </Text>
         </div>
         <div>
@@ -132,11 +143,11 @@ const MaintMint = ({ accounts, setAccounts }) => {
                 paddingLeft="19px"
                 marginTop="10px"
                 type="number"
-                value='1'
+                value="1"
               />
 
               <Box
-                onClick= {handleOneClick}
+                onClick={mint}
                 width="20rem"
                 display="flex" // Set this to flex
                 alignItems="center" // Center content vertically
@@ -163,29 +174,112 @@ const MaintMint = ({ accounts, setAccounts }) => {
             justify="center"
             align="center"
             height="35vh"
-            paddingBottom="20px"
+            paddingBottom="100px"
           >
-            <Box
-              onClick={handleLoginClick}
-              width="30rem"
-              display="flex" // Set this to flex
-              alignItems="center" // Center content vertically
-              justifyContent="center" // Center content horizontally
-              margin="20px 20px"
-              cursor="pointer"
-              className="animate-bounce0"
-              boxShadow="lg"
-              border="2px solid"
-              borderColor="#FFFFFF"
-              _hover={{ bg: "gray.200" }}
-              role="button"
-              transition="0.3s"
-              padding="20px 20px" // Adjust the size of the box around the content
-              fontSize="1.5rem" // Increase the font size
-              fontWeight="bold" // Make the text bold for emphasis
-            >
-              Connect Account
-            </Box>
+            <Menu placement="bottom">
+              <MenuButton
+                background="black" // Set the background to black
+                color="white" // Set the text color to white
+                as={Button}
+                width="30rem"
+                display="flex" // Set this to flex
+                alignItems="center" // Center content vertically
+                justifyContent="center" // Center content horizontally
+                margin="20px 20px"
+                cursor="pointer"
+                className="animate-bounce0"
+                boxShadow="lg"
+                border="2px solid"
+                borderColor="#FFFFFF"
+                _hover={{ bg: "gray.200" }}
+                role="button"
+                transition="0.3s"
+                padding="20px 20px" // Adjust the size of the box around the content
+                fontSize="1.5rem" // Increase the font size
+                fontWeight="bold" // Make the text bold for emphasis
+              >
+                Connect wallet
+              </MenuButton>
+
+              <MenuList>
+                <MenuItem
+                  background="black"
+                  color="white"
+                  icon={<MetamaskLogo />}
+                  onClick={async () => {
+                    try {
+                      // Connect to MetaMask. If this function doesn't actually connect, adjust accordingly.
+
+                      // After connecting, try to switch the network
+                      if (window.ethereum) {
+                        await requestNetworkSwitch(window.ethereum);
+                        await connectWithMetamask();
+                      } else {
+                        console.error(
+                          "Ethereum provider (MetaMask) is not connected or not available."
+                        );
+                      }
+                    } catch (error) {
+                    toast.error('Oeps something went wrong')
+                      console.error("An error occurred:", error);
+                    }
+                  }}
+                >
+                  Connect MetaMask
+                </MenuItem>
+
+                <MenuItem
+                  background="black" // Set the background to black
+                  color="white" // Set the text color to white
+                  icon={<WalletConnectLogo />}
+                  onClick={async () => {
+                    try {
+                      // Connect to MetaMask. If this function doesn't actually connect, adjust accordingly.
+
+                      // After connecting, try to switch the network
+                      if (window.ethereum) {
+                        await requestNetworkSwitch(window.ethereum);
+                        await connectWithWalletConnect();
+                      } else {
+                        toast.error('Oeps something went wrong')
+                        console.error(
+                          "Ethereum provider (MetaMask) is not connected or not available."
+                        );
+                      }
+                    } catch (error) {
+                      console.error("An error occurred:", error);
+                    }
+                  }}
+                >
+                  Connect with Wallet Connect
+                </MenuItem>
+                <MenuItem
+                  background="black" // Set the background to black
+                  color="white" // Set the text color to white
+                  icon={<CoinbaseLogo />}
+                  onClick={async () => {
+                    try {
+                      // Connect to MetaMask. If this function doesn't actually connect, adjust accordingly.
+
+                      // After connecting, try to switch the network
+                      if (window.ethereum) {
+                        await requestNetworkSwitch(window.ethereum);
+                        await connectWithCoinbaseWallet();
+                      } else {
+                        toast.error('Oeps something went wrong')
+                        console.error(
+                          "Ethereum provider (MetaMask) is not connected or not available."
+                        );
+                      }
+                    } catch (error) {
+                      console.error("An error occurred:", error);
+                    }
+                  }}
+                >
+                  Connect with Coinbase Wallet
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         )}
       </Box>

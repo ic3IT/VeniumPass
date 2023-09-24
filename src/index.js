@@ -1,29 +1,21 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
-import "./styles/globals.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { ThirdwebProvider, useContract } from '@thirdweb-dev/react';
+import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 
-// This is the chain your dApp will work on.
-// Change this to the chain your app is built for.
-// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-const activeChain = "ethereum";
-
-const container = document.getElementById("root");
-const root = createRoot(container);
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThirdwebProvider
-      activeChain={activeChain}
-      clientId={process.env.REACT_APP_TEMPLATE_CLIENT_ID}
-    >
-      <App />
+    <ThirdwebProvider activeChain={ ScrollSepoliaTestnet } 
+      clientId="1e11f5ed7379e8b2e3305a4bf4ebe2db">
+    <App />
     </ThirdwebProvider>
   </React.StrictMode>
+  
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function Component() {
+  const { contract, isLoading } = useContract("0xf7cFC8c624b386aC05de7154c5E4593C3C735B7A");
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Flex, Image, Link, Spacer } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Link, Spacer, Show, Hide } from '@chakra-ui/react';
 import Discord from "./assets/social-media-icons/discord.gif";
 import Twitter from "./assets/social-media-icons/twitter.gif";
 import sc from "./assets/social-media-icons/sc.gif";
@@ -13,7 +13,7 @@ const NavBar = ({accounts, setAccounts}) => {
 
     return(
         
-        <Flex justify="space-between" align="center" padding="30px">
+        <Flex justify="space-between" align="center" padding="5px">
         
             {/*Left Side - Social Media Icons*/}
             <Flex justify="space-around" width="40%" padding="0px">
@@ -35,24 +35,23 @@ const NavBar = ({accounts, setAccounts}) => {
             <Link href="scrollium.io" target="_blank" rel="noopener noreferrer">
                     <Image src={Discord} boxSize="50px" margin="0 15px"/>
                 </Link>
-                { address ? (
-    <Box 
-    onClick={disconnect} 
-    boxSize="50px"
-    margin="15px 15px 0 15px" 
-    cursor="pointer"
-    _hover={{ bg: "gray.200" }} // Change the background on hover for visual feedback
-    role="button" // For accessibility
-    transition="0.3s" // Smoothens the hover effect transition
->
-    Disconnect
-</Box>
 
-) : null }
+    { address ? (
+        <Box 
+            onClick={disconnect} 
+            boxSize="50px"
+            margin="15px 15px 0 15px"
+            cursor="pointer"
+            _hover={{ bg: "gray.200" }}
+            role="button"
+            transition="0.3s"
+        >
+            Disconnect
+        </Box>
+    ) : null }
+
             </Flex>
-            
-      
-
+  
             
         </Flex>
         

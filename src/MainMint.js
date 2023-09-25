@@ -68,11 +68,9 @@ const MaintMint = ({ accounts, setAccounts }) => {
   const connectWithMetamask = useMetamask();
 
   const address = useAddress();
-  console.log({address})
   const disconnect = useDisconnect();
   const { data: stock } = useContractRead(contract, "totalSupply", '0');
   const { contract: editionDrop } = useContract(contractAddress);
-  console.log({editionDrop})
   const tokenId = 0;
   
   const {
@@ -120,7 +118,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
   }
 
   return (
-    <Flex justify="center" align="center" height="70vh" paddingBottom="20px">
+    <Flex justify="center" align="center" height="70vh" paddingBottom="20px" paddingTop='60px'>
       <Toaster position="top-center" />
       <Box width="600px">
         <div className="">
@@ -143,7 +141,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
               align="center"
               flexDirection="column"
               height="35vh"
-              paddingBottom="20px"
+              paddingBottom="100px"
             >
               <Input
                 readOnly

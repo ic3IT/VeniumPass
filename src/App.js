@@ -12,8 +12,10 @@ function App() {
     <div className="overlay">
     <div className="App">
   
-  <div className="App">
+  <div className="App scrollable-container">
     <NavBar accounts={accounts} setAccounts={setAccounts} />
+    <div><br></br></div>
+    <div><br></br></div>
     <MainMint accounts={accounts} setAccounts={setAccounts} />
 </div>
 <div className="moving-background"> </div>

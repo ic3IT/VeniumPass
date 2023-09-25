@@ -57,15 +57,22 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 
-const contractAddress = "0xf7cFC8c624b386aC05de7154c5E4593C3C735B7A";
+const contractAddress = "0xE22b73A12f0745d4205E475e73e1b6A16358C184";
 
 const MaintMint = ({ accounts, setAccounts }) => {
   const contract = useNFTDrop(contractAddress);
   const connectWithCoinbaseWallet = useCoinbaseWallet();
   const connectWithWalletConnect = useWalletConnect();
   const connectWithMetamask = useMetamask();
+
   const address = useAddress();
+  console.log({address})
   const disconnect = useDisconnect();
+  const { data: stock } = useContractRead(contract, "totalSupply", '0');
+  const { contract: editionDrop } = useContract(contractAddress);
+  console.log({editionDrop})
+
+  
   const {
     data: totalCirculatingSupply,
     isLoading,
@@ -77,13 +84,14 @@ const MaintMint = ({ accounts, setAccounts }) => {
 
   const mint = async () => {
     try {
-      await contract?.claim(1);
+      await contract?.claim('0', 1);
       alert("mint succesfull");
     } catch (error) {
       toast.error("You are not Whitelisted!");
       console.log("error");
     }
   };
+
   const desiredNetwork = {
     chainId: "0x8274F",
     chainName: "Scroll Alpha Testnet",
@@ -119,7 +127,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         </div>
         <div>
           <Text>
-            Total Minted: {totalCirculatingSupply?.toNumber()} / 2222{" "}
+            Total Minted: {stock?.toNumber()} / 2222{" "}
           </Text>
         </div>
         <div>

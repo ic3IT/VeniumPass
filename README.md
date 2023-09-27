@@ -11,7 +11,7 @@ Install the template with [thirdweb create](https://portal.thirdweb.com/cli/crea
 ```
 
 ## Run Locally
-
+sd
 Install dependencies
 
 ```bash

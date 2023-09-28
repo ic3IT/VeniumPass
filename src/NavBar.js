@@ -28,11 +28,11 @@ const NavBar = ({accounts, setAccounts}) => {
                <Flex justify="space-around" width="40%" padding="75px">
                 
             <Spacer />
-            <Link href="scrollium.io" target="_blank" rel="noopener noreferrer">
+            <Link href="https://twitter.com/Scroll_ium" target="_blank" rel="noopener noreferrer">
                     <Image src={Twitter} boxSize="50px" margin="0 15px"/>
                 </Link>
             <Spacer />      
-            <Link href="scrollium.io" target="_blank" rel="noopener noreferrer">
+            <Link href="https://discord.gg/DfxCrvD4Q" target="_blank" rel="noopener noreferrer">
                     <Image src={Discord} boxSize="50px" margin="0 15px"/>
                 </Link>
 

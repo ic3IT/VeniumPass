@@ -58,7 +58,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 
-const contractAddress = "0xE22b73A12f0745d4205E475e73e1b6A16358C184";
+const contractAddress = "0x08521584cD22Da31c02963d42399f828e75d0508";
 
 const MaintMint = ({ accounts, setAccounts }) => {
   const { contract } = useContract(contractAddress);

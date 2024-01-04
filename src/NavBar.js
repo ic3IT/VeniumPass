@@ -17,7 +17,7 @@ const NavBar = ({accounts, setAccounts}) => {
         
             {/*Left Side - Social Media Icons*/}
             <Flex justify="space-around" width="40%" padding="0px">
-                <Link href="https://www.scrollium.io/" target="_blank" rel="noopener noreferrer">
+                <Link href="https://www.venium.io/" target="_blank" rel="noopener noreferrer">
                     <Image src={sc} boxSize="70px" margin="0 15px"/>
                 </Link>
             </Flex> 
@@ -28,11 +28,11 @@ const NavBar = ({accounts, setAccounts}) => {
                <Flex justify="space-around" width="40%" padding="75px">
                 
             <Spacer />
-            <Link href="https://twitter.com/Scroll_ium" target="_blank" rel="noopener noreferrer">
+            <Link href="https://twitter.com/venium_io" target="_blank" rel="noopener noreferrer">
                     <Image src={Twitter} boxSize="50px" margin="0 15px"/>
                 </Link>
             <Spacer />      
-            <Link href="https://discord.gg/DfxCrvD4Q" target="_blank" rel="noopener noreferrer">
+            <Link href="https://discord.gg/KahWepmJ" target="_blank" rel="noopener noreferrer">
                     <Image src={Discord} boxSize="50px" margin="0 15px"/>
                 </Link>
 

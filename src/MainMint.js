@@ -58,7 +58,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 
-const contractAddress = "0x08521584cD22Da31c02963d42399f828e75d0508";
+const contractAddress = "0x971AB58ddfb3bdbFf21bBa6D3e9F8a43AC232891";
 
 const MaintMint = ({ accounts, setAccounts }) => {
   const { contract } = useContract(contractAddress);
@@ -87,22 +87,22 @@ const MaintMint = ({ accounts, setAccounts }) => {
         await contract?.claim('0', 1);
         toast.success("Mint Succesfull");
     } catch (error) {
-        toast.error("You are not Whitelisted!");
+        toast.error("An Error Has Occured");
         console.log(error);
     }
 };
 
 
   const desiredNetwork = {
-    chainId: "0x8274F",
-    chainName: "Scroll Alpha Testnet",
+    chainId: "0x82750",
+    chainName: "Scroll",
     nativeCurrency: {
       name: "ETH",
       symbol: "ETH",
       decimals: 18,
     },
-    rpcUrls: ["https://sepolia-rpc.scroll.io"],
-    blockExplorerUrls: ["https://sepolia-blockscout.scroll.io"],
+    rpcUrls: ["https://rpc.scroll.io"],
+    blockExplorerUrls: ["https://scrollscan.com/"],
   };
 
   async function requestNetworkSwitch(provider) {
@@ -128,7 +128,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         </div>
         <div>
           <Text>
-            Total Minted: {stock?.toNumber()} / 2222{" "}
+            Total Minted: {stock?.toNumber()} / 3333{" "}
           </Text>
         </div>
         <div>

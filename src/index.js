@@ -8,8 +8,27 @@ import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThirdwebProvider activeChain={ ScrollSepoliaTestnet } 
-      clientId="1e11f5ed7379e8b2e3305a4bf4ebe2db">
+    <ThirdwebProvider 
+    activeChain={{
+      // === Required information for connecting to the network === \\
+      chainId: 534352, // Chain ID of the network
+      // Array of RPC URLs to use
+      rpc: ["https://rpc.scroll.io"],
+
+      // === Information for adding the network to your wallet (how it will appear for first time users) === \\
+      // Information about the chain's native currency (i.e. the currency that is used to pay for gas)
+      nativeCurrency: {
+        decimals: 18,
+        name: "ETH",
+        symbol: "ETH",
+      },
+      shortName: "Scroll", // Display value shown in the wallet UI
+      slug: "Scroll", // Display value shown in the wallet UI
+      testnet: true, // Boolean indicating whether the chain is a testnet or mainnet
+      chain: "Scroll", // Name of the network
+      name: "Scroll", // Name of the network
+    }}
+    clientId='24d96df2b5c769b8acb15d27f1df6143'> 
     <App />
     </ThirdwebProvider>
   </React.StrictMode>
@@ -17,5 +36,5 @@ root.render(
 );
 
 function Component() {
-  const { contract, isLoading } = useContract("0xf7cFC8c624b386aC05de7154c5E4593C3C735B7A");
+  const { contract, isLoading } = useContract("0x971AB58ddfb3bdbFf21bBa6D3e9F8a43AC232891");
 }

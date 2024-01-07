@@ -58,7 +58,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
 
-const contractAddress = "0x971AB58ddfb3bdbFf21bBa6D3e9F8a43AC232891";
+const contractAddress = "0x19C16D890244F7377a208d61bBC5Cc71Db07b7b1";
 
 const MaintMint = ({ accounts, setAccounts }) => {
   const { contract } = useContract(contractAddress);
@@ -69,7 +69,10 @@ const MaintMint = ({ accounts, setAccounts }) => {
 
   const address = useAddress();
   const disconnect = useDisconnect();
-  const { data: stock } = useContractRead(contract, "totalSupply", '0');
+  const { data: stock } = useContractRead(contract, "totalMinted");
+  // const { mutateAsync: claim } = useContractWrite(contract, "claim");
+
+
   const { contract: editionDrop } = useContract(contractAddress);
   const tokenId = 0;
   
@@ -84,7 +87,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
 
   const mint = async () => {
     try {
-        await contract?.claim('0', 1);
+        await contract.erc721.claim(1);
         toast.success("Mint Succesfull");
     } catch (error) {
         toast.error("An Error Has Occured");

@@ -87,13 +87,24 @@ const MaintMint = ({ accounts, setAccounts }) => {
 
   const mint = async () => {
     try {
+        // Your transaction call
         await contract.erc721.claim(1);
-        toast.success("Mint Succesfull");
+        toast.success("Mint Successful");
     } catch (error) {
-        toast.error("An Error Has Occured");
-        console.log(error);
+        console.error("Error encountered:", error);
+
+        // Check for the specific pattern in the error message
+        if (error.message.includes('Transaction reverted without a reason string')) {
+            toast.error("Insuffienct Funds for Mint");
+        } else {
+            // Handle other errors
+            toast.error("An unexpected error occurred.");
+        }
     }
 };
+
+
+
 
 
   const desiredNetwork = {

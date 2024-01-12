@@ -140,6 +140,11 @@ const MaintMint = ({ accounts, setAccounts }) => {
             Scrollium Pass
           </Text>
         </div>
+        {/* <div>
+          <Text>
+            Mint price: 0.002.ETH
+          </Text>
+        </div> */}
         <div>
           <Text>
             Total Minted: {stock?.toNumber()} / 3333{" "}
@@ -168,6 +173,9 @@ const MaintMint = ({ accounts, setAccounts }) => {
                 type="number"
                 value="1"
               />
+              <Text fontSize="14px">
+            Mint price: 0.002.ETH
+            </Text>
 
               <Box
                 onClick={mint}

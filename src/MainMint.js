@@ -147,7 +147,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         </div> */}
         <div>
           <Text>
-            Total Minted: {stock?.toNumber() + 160}{" "}
+            Total Minted: {stock?.toNumber() + 103}{" "}
           </Text>
         </div>
         <div>

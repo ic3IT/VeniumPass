@@ -188,7 +188,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
             Scrollium Pass
           </Text>
           <Flex justify="center">
-         {/* <CountdownTimer targetDate="2024-02-16"/> */}
+          <CountdownTimer targetDate="2024-02-16"/> 
          </Flex>
         </div>
         {/* <div>

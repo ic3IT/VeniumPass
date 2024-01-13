@@ -131,25 +131,76 @@ const MaintMint = ({ accounts, setAccounts }) => {
     }
   }
 
+  function CountdownTimer({ targetDate }) {
+    const calculateTimeLeft = () => {
+        const difference = +new Date(targetDate) - +new Date();
+        let timeLeft = {};
+
+        if (difference > 0) {
+            timeLeft = {
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / 1000 / 60) % 60),
+                // seconds: Math.floor((difference / 1000) % 60)
+            };
+        }
+
+        return timeLeft;
+    };
+
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setTimeLeft(calculateTimeLeft());
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    });
+
+    const timerComponents = [];
+
+    Object.keys(timeLeft).forEach((interval) => {
+        if (!timeLeft[interval]) {
+            return;
+        }
+
+        timerComponents.push(
+          <Text as="span" fontSize="13px" key={interval}>
+              {timeLeft[interval]} {interval}{" "}
+          </Text>
+        );
+    });
+
+    return (
+        <div>
+            {timerComponents.length ? timerComponents : <span>Time's up!</span>}
+        </div>
+    );
+}
+
   return (
     <Flex justify="center" align="center" height="70vh" paddingBottom="20px" paddingTop='60px'>
       <Toaster position="top-center" />
-      <Box width="600px">
-        <div className="">
+      <Box width="600px" height="950px">
+        <div>
           <Text fontSize="60px" textShadow="0 5px #000000">
             Scrollium Pass
           </Text>
+          <Flex justify="center">
+         {/* <CountdownTimer targetDate="2024-02-16"/> */}
+         </Flex>
         </div>
         {/* <div>
           <Text>
             Mint price: 0.002.ETH
           </Text>
         </div> */}
-        <div>
+        <Flex justify="center" >
           <Text>
             Total Minted: {stock?.toNumber() + x}{" "}
           </Text>
-        </div>
+        </Flex>
         <div>
           <img src={sc} className="items-center justify-center" />
         </div>

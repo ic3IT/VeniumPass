@@ -71,7 +71,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
   const disconnect = useDisconnect();
   const { data: stock } = useContractRead(contract, "totalMinted");
   // const { mutateAsync: claim } = useContractWrite(contract, "claim");
-
+  const d = 65;
 
   const { contract: editionDrop } = useContract(contractAddress);
   const tokenId = 0;
@@ -84,7 +84,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
   const { data: count } = useTotalCount(contract);
 
   const { data: contractMetadata } = useContractMetadata(contract);
-
+  const x = d;
   const mint = async () => {
     try {
         // Your transaction call
@@ -147,7 +147,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         </div> */}
         <div>
           <Text>
-            Total Minted: {stock?.toNumber()} / 3333{" "}
+            Total Minted: {stock?.toNumber() + x}{" "}
           </Text>
         </div>
         <div>

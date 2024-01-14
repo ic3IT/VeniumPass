@@ -198,7 +198,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         </div> */}
         <Flex justify="center" >
           <Text>
-            Total Minted: {stock?.toNumber() + x} / 3333{" "}
+            Total Minted: {stock?.toNumber() + x}{" "}
           </Text>
         </Flex>
         <div>

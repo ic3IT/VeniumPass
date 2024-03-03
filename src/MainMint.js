@@ -228,7 +228,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
             Mint price: 0.002.ETH
             </Text>
 
-              <Box
+              {/* <Box
                 onClick={mint}
                 width="20rem"
                 display="flex" // Set this to flex
@@ -248,7 +248,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
                 fontWeight="bold" // Make the text bold for emphasis
               >
                 Mint Now
-              </Box>
+              </Box> */}
             </Flex>
           </div>
         ) : (
@@ -258,7 +258,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
             height="35vh"
             paddingBottom="100px"
           >
-            <Menu placement="bottom">
+            {/* <Menu placement="bottom">
               <MenuButton
                 background="black" // Set the background to black
                 color="white" // Set the text color to white
@@ -361,7 +361,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
                   Connect with Coinbase Wallet
                 </MenuItem>
               </MenuList>
-            </Menu>
+            </Menu> */}
           </Flex>
         )}
       </Box>

@@ -40,10 +40,11 @@ const NavBar = ({ accounts, setAccounts }) => {
                         <Image src={Twitter} boxSize="50px" margin="0 15px" />
                     </Link>
                     <Spacer />
-                    <Link href="https://discord.gg/9jHynHVx" target="_blank" rel="noopener noreferrer">
+                    <Link href="https://discord.gg/vtc8gKuT8s" target="_blank" rel="noopener noreferrer">
                         <Image src={Discord} boxSize="50px" margin="0 15px" />
                     </Link>
                     <Spacer />
+                 <Link href="https://stake.venium.io" target="_blank" rel="noopener noreferrer">
                         <Box
                             height="50px"
                             width="150px"
@@ -73,6 +74,7 @@ const NavBar = ({ accounts, setAccounts }) => {
                         >
                             Stake
                         </Box>
+                     </Link>
 
 
                     {address ? (

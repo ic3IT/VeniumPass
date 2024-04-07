@@ -205,14 +205,14 @@ const MaintMint = ({ accounts, setAccounts }) => {
         <div>
           <img src={sc} className="items-center justify-center" />
         </div>
-        <Flex justify="center"
+        {address ? (
+          <div>
+             <Flex justify="center"
               align="center"
               >
                 <span>Elgible for {etherAmount}</span>
               </Flex>
-        {/* {address ? (
-          <div>
-            <Flex
+            {/* <Flex
               justify="center"
               align="center"
               flexDirection="column"
@@ -243,7 +243,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
               >
                 Withdraw
               </Box>
-            </Flex>
+            </Flex> */}
           </div>
         ) : (
           <Flex
@@ -254,7 +254,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
           >
             <ConnectWallet/>
           </Flex>
-        )} */}
+        )}
       </Box>
     </Flex>
   );

@@ -188,9 +188,6 @@ const MaintMint = ({ accounts, setAccounts }) => {
           <Text fontSize="60px" textShadow="0 5px #000000">
             Scrollium Pass
           </Text>
-          <Flex justify="center">
-          <CountdownTimer targetDate="2024-02-16"/> 
-         </Flex>
         </div>
         {/* <div>
           <Text>
@@ -207,10 +204,14 @@ const MaintMint = ({ accounts, setAccounts }) => {
         </div>
         {address ? (
           <div>
+                <Flex justify="center">
+          <CountdownTimer targetDate="2024-04-10"/> 
+         </Flex>
              <Flex justify="center"
               align="center"
+              paddingTop="32px"
               >
-                <span>Elgible for {etherAmount}</span>
+                <span>Eligible for {etherAmount}</span>
               </Flex>
             {/* <Flex
               justify="center"

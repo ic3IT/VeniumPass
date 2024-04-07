@@ -28,7 +28,7 @@ root.render(
       chain: "Scroll", // Name of the network
       name: "Scroll", // Name of the network
     }}
-    clientId='1febfb6f16a97c2f8206e5293a8958f1'> 
+    clientId='24d96df2b5c769b8acb15d27f1df6143'> 
     <App />
     </ThirdwebProvider>
   </React.StrictMode>

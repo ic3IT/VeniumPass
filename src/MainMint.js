@@ -57,51 +57,63 @@ import {
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 import { ScrollSepoliaTestnet } from "@thirdweb-dev/chains";
+import { ConnectWallet } from "@thirdweb-dev/react";
+import { useRef } from "react";
 
-const contractAddress = "0xFbBce08d3395314C70EC7696AEb9A1882C893632";
+const contractAddress = "0x1e62eC2e1813a3305B3Fe7099347dF50b1E73923";
 
 const MaintMint = ({ accounts, setAccounts }) => {
   const { contract } = useContract(contractAddress);
-
-  const connectWithCoinbaseWallet = useCoinbaseWallet();
-  const connectWithWalletConnect = useWalletConnect();
-  const connectWithMetamask = useMetamask();
-
   const address = useAddress();
-  const disconnect = useDisconnect();
-  const { data: stock } = useContractRead(contract, "totalMinted");
-  // const { mutateAsync: claim } = useContractWrite(contract, "claim");
-  const d = 65;
+  const { data: availableForWithdrawal } = useContractRead(
+    contract,
+    "availableForWithdrawal",
+    [address]
+  );  
+  const etherAmount = ethers.utils.formatUnits(availableForWithdrawal || 0, 18);
+  console.log(etherAmount)
 
-  const { contract: editionDrop } = useContract(contractAddress);
-  const tokenId = 0;
-  
-  const {
-    data: totalCirculatingSupply,
-    isLoading,
-    error,
-  } = useTotalCirculatingSupply(contract);
-  const { data: count } = useTotalCount(contract);
+  const isCooldown = useRef(false);
 
-  const { data: contractMetadata } = useContractMetadata(contract);
-  const x = d;
-  const mint = async () => {
-    try {
-        // Your transaction call
-        await contract.erc721.claim(1);
-        toast.success("Mint Successful");
-    } catch (error) {
-        console.error("Error encountered:", error);
+  const { mutateAsync: withdrawTokens } = useContractWrite(
+    contract,
+    "withdrawTokens"
+  );
 
-        // Check for the specific pattern in the error message
-        if (error.message.includes('Transaction reverted without a reason string')) {
-            toast.error("Insuffienct Funds for Mint");
-        } else {
-            // Handle other errors
-            toast.error("An unexpected error occurred.");
-        }
+  const handleWithdraw = async () => {
+    if (isCooldown.current) {
+      return;
     }
-};
+    const notification = toast.loading("Withdraw Tokens...");
+
+    if ( availableForWithdrawal === 0) {
+      toast.error("No Tokens Unlocked Yet")
+    }
+
+    try {
+      const data = await withdrawTokens({ args: [] }, );
+      if ( availableForWithdrawal === 0) {
+        toast.error("No tokens eligble")
+      }
+
+      toast.success("Withdraw succesfully!", {
+        id: notification,
+        duration: 300
+      });
+    } catch (err) {
+      toast.error("No tokens for withdraw", {
+        id: notification,
+        duration: 300
+      } ); 
+
+      console.error("contract call failure", err);
+    } finally {
+      // Reset the cooldown after 3 seconds, whether the try block succeeded or caught an error
+      setTimeout(() => {
+        isCooldown.current = false;
+      }, 3000);
+  };
+}
 
 
 
@@ -119,17 +131,6 @@ const MaintMint = ({ accounts, setAccounts }) => {
     blockExplorerUrls: ["https://scrollscan.com/"],
   };
 
-  async function requestNetworkSwitch(provider) {
-    try {
-      await provider.request({
-        method: "wallet_addEthereumChain",
-        params: [desiredNetwork],
-      });
-    } catch (switchError) {
-      console.error(switchError);
-      // Handle the error, maybe alert the user they need to switch manually or the network details are wrong
-    }
-  }
 
   function CountdownTimer({ targetDate }) {
     const calculateTimeLeft = () => {
@@ -196,15 +197,20 @@ const MaintMint = ({ accounts, setAccounts }) => {
             Mint price: 0.002.ETH
           </Text>
         </div> */}
-        <Flex justify="center" >
+        {/* <Flex justify="center" >
           <Text>
             Total Minted: {stock?.toNumber() + x}{" "}
           </Text>
-        </Flex>
+        </Flex> */}
         <div>
           <img src={sc} className="items-center justify-center" />
         </div>
-        {address ? (
+        <Flex justify="center"
+              align="center"
+              >
+                <span>Elgible for {etherAmount}</span>
+              </Flex>
+        {/* {address ? (
           <div>
             <Flex
               justify="center"
@@ -213,23 +219,11 @@ const MaintMint = ({ accounts, setAccounts }) => {
               height="35vh"
               paddingBottom="100px"
             >
-              <Input
-                readOnly
-                fontFamily="inherit"
-                width="100px"
-                height="40px"
-                textAlign="center"
-                paddingLeft="19px"
-                marginTop="10px"
-                type="number"
-                value="1"
-              />
-              <Text fontSize="14px">
-            Mint price: 0.002.ETH
-            </Text>
-
-              {/* <Box
-                onClick={mint}
+              <Flex>
+                <span>Elgible for {etherAmount}</span>
+              </Flex>
+              <Box
+                onClick={handleWithdraw}
                 width="20rem"
                 display="flex" // Set this to flex
                 alignItems="center" // Center content vertically
@@ -244,11 +238,11 @@ const MaintMint = ({ accounts, setAccounts }) => {
                 role="button"
                 transition="0.3s"
                 padding="20px 20px" // Adjust the size of the box around the content
-                fontSize="1.5rem" // Increase the font size
+                fontSize="1rem" // Increase the font size
                 fontWeight="bold" // Make the text bold for emphasis
               >
-                Mint Now
-              </Box> */}
+                Withdraw
+              </Box>
             </Flex>
           </div>
         ) : (
@@ -258,112 +252,9 @@ const MaintMint = ({ accounts, setAccounts }) => {
             height="35vh"
             paddingBottom="100px"
           >
-            {/* <Menu placement="bottom">
-              <MenuButton
-                background="black" // Set the background to black
-                color="white" // Set the text color to white
-                as={Button}
-                width="30rem"
-                display="flex" // Set this to flex
-                alignItems="center" // Center content vertically
-                justifyContent="center" // Center content horizontally
-                margin="20px 20px"
-                cursor="pointer"
-                className="animate-bounce0"
-                boxShadow="lg"
-                border="2px solid"
-                borderColor="#FFFFFF"
-                _hover={{ bg: "gray.200" }}
-                role="button"
-                transition="0.3s"
-                padding="20px 20px" // Adjust the size of the box around the content
-                fontSize="1.5rem" // Increase the font size
-                fontWeight="bold" // Make the text bold for emphasis
-              >
-                Connect wallet
-              </MenuButton>
-
-              <MenuList>
-                <MenuItem
-                  background="black"
-                  color="white"
-                  icon={<MetamaskLogo />}
-                  onClick={async () => {
-                    try {
-                      // Connect to MetaMask. If this function doesn't actually connect, adjust accordingly.
-
-                      // After connecting, try to switch the network
-                      if (window.ethereum) {
-                        await requestNetworkSwitch(window.ethereum);
-                        await connectWithMetamask();
-                      } else {
-                        console.error(
-                          "Ethereum provider (MetaMask) is not connected or not available."
-                        );
-                      }
-                    } catch (error) {
-                    toast.error('Oeps something went wrong')
-                      console.error("An error occurred:", error);
-                    }
-                  }}
-                >
-                  Connect MetaMask
-                </MenuItem>
-
-                <MenuItem
-                  background="black" // Set the background to black
-                  color="white" // Set the text color to white
-                  icon={<WalletConnectLogo />}
-                  onClick={async () => {
-                    try {
-                      // Connect to MetaMask. If this function doesn't actually connect, adjust accordingly.
-
-                      // After connecting, try to switch the network
-                      if (window.ethereum) {
-                        await requestNetworkSwitch(window.ethereum);
-                        await connectWithWalletConnect();
-                      } else {
-                        toast.error('Oeps something went wrong')
-                        console.error(
-                          "Ethereum provider (MetaMask) is not connected or not available."
-                        );
-                      }
-                    } catch (error) {
-                      console.error("An error occurred:", error);
-                    }
-                  }}
-                >
-                  Connect with Wallet Connect
-                </MenuItem>
-                <MenuItem
-                  background="black" // Set the background to black
-                  color="white" // Set the text color to white
-                  icon={<CoinbaseLogo />}
-                  onClick={async () => {
-                    try {
-                      // Connect to MetaMask. If this function doesn't actually connect, adjust accordingly.
-
-                      // After connecting, try to switch the network
-                      if (window.ethereum) {
-                        await requestNetworkSwitch(window.ethereum);
-                        await connectWithCoinbaseWallet();
-                      } else {
-                        toast.error('Oeps something went wrong')
-                        console.error(
-                          "Ethereum provider (MetaMask) is not connected or not available."
-                        );
-                      }
-                    } catch (error) {
-                      console.error("An error occurred:", error);
-                    }
-                  }}
-                >
-                  Connect with Coinbase Wallet
-                </MenuItem>
-              </MenuList>
-            </Menu> */}
+            <ConnectWallet/>
           </Flex>
-        )}
+        )} */}
       </Box>
     </Flex>
   );

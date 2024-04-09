@@ -205,7 +205,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         {address ? (
           <div>
                 <Flex justify="center">
-          <CountdownTimer targetDate="2024-04-12"/> 
+          {/* <CountdownTimer targetDate="2024-04-12"/>  */}
          </Flex>
              <Flex justify="center"
               align="center"

@@ -205,7 +205,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
         {address ? (
           <div>
                 <Flex justify="center">
-          <CountdownTimer targetDate="2024-04-10"/> 
+          <CountdownTimer targetDate="2024-04-12"/> 
          </Flex>
              <Flex justify="center"
               align="center"
@@ -213,16 +213,13 @@ const MaintMint = ({ accounts, setAccounts }) => {
               >
                 <span>Eligible for {etherAmount}</span>
               </Flex>
-            {/* <Flex
+            <Flex
               justify="center"
               align="center"
               flexDirection="column"
-              height="35vh"
+              height="30vh"
               paddingBottom="100px"
             >
-              <Flex>
-                <span>Elgible for {etherAmount}</span>
-              </Flex>
               <Box
                 onClick={handleWithdraw}
                 width="20rem"
@@ -244,7 +241,7 @@ const MaintMint = ({ accounts, setAccounts }) => {
               >
                 Withdraw
               </Box>
-            </Flex> */}
+            </Flex>
           </div>
         ) : (
           <Flex
